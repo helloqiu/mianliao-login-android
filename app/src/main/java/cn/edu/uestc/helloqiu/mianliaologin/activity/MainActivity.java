@@ -2,6 +2,8 @@ package cn.edu.uestc.helloqiu.mianliaologin.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,20 +36,40 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
             Toast.makeText(getApplicationContext(), "Login ...", Toast.LENGTH_SHORT).show();
-            LoginHttpsWorker loginHttpsWorker = new LoginHttpsWorker(getApplicationContext());
-            String returnValue = loginHttpsWorker.login(username.getText().toString(), password.getText().toString());
-            if (returnValue.equals(loginHttpsWorker.SUCCESS)) {
-                Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (returnValue.equals(loginHttpsWorker.FAIL)) {
-                Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (returnValue.equals(loginHttpsWorker.SERVERERROR)) {
-                Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            final Handler handler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    if (msg.what == 0) {
+                        Toast.makeText(getApplicationContext(),"Login success!",Toast.LENGTH_SHORT).show();
+                    }
+                    if (msg.what == 1) {
+                        Toast.makeText(getApplicationContext(),"Login Fail!Check the password and username!",Toast.LENGTH_SHORT).show();
+                    }
+                    if (msg.what == 2) {
+                        Toast.makeText(getApplicationContext(),"Maybe the server is down!",Toast.LENGTH_SHORT).show();
+                    }
+                    return false;
+                }
+            });
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    LoginHttpsWorker loginHttpsWorker = new LoginHttpsWorker(getApplicationContext());
+                    String returnValue = loginHttpsWorker.login(username.getText().toString(), password.getText().toString());
+                    Message message = new Message();
+                    if (returnValue.equals(loginHttpsWorker.SUCCESS)) {
+                        message.what = 0;
+                    }
+                    if (returnValue.equals(loginHttpsWorker.FAIL)) {
+                        message.what = 1;
+                    }
+                    if (returnValue.equals(loginHttpsWorker.SERVERERROR)) {
+                        message.what = 2;
+                    }
+                    handler.sendMessage(message);
+                }
+            }).start();
+
         }
     };
 }
