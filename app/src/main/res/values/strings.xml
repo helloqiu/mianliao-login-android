@@ -4,4 +4,6 @@
     <string name="username">Username:</string>
     <string name="password">Password:</string>
     <string name="login">Login</string>
+    <string name="Success">Success</string>
+    <string name="Fail">Fail</string>
 </resources>

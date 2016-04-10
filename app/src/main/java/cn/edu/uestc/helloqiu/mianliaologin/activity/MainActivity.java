@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dd.CircularProgressButton;
+
 import cn.edu.uestc.helloqiu.mianliaologin.R;
 import cn.edu.uestc.helloqiu.mianliaologin.component.LoginHttpsWorker;
 
@@ -18,6 +20,7 @@ import cn.edu.uestc.helloqiu.mianliaologin.component.LoginHttpsWorker;
 public class MainActivity extends Activity {
     EditText password;
     EditText username;
+    CircularProgressButton loginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,7 @@ public class MainActivity extends Activity {
         username = (EditText) findViewById(R.id.main_username_editText);
         password = (EditText) findViewById(R.id.main_password_editText);
 
-        Button loginButton = (Button) findViewById(R.id.main_login_button);
+        loginButton = (CircularProgressButton) findViewById(R.id.main_login_button);
         loginButton.setOnClickListener(listener);
 
     }
@@ -36,18 +39,45 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
             Toast.makeText(getApplicationContext(), "Login ...", Toast.LENGTH_SHORT).show();
+            loginButton.setIndeterminateProgressMode(true);
+            loginButton.setProgress(50);
+            final Handler buttonHandler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    loginButton.setProgress(0);
+                    return false;
+                }
+            });
             final Handler handler = new Handler(new Handler.Callback() {
                 @Override
                 public boolean handleMessage(Message msg) {
                     if (msg.what == 0) {
-                        Toast.makeText(getApplicationContext(),"Login success!",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_SHORT).show();
+                        loginButton.setProgress(100);
                     }
+                    /*
                     if (msg.what == 1) {
-                        Toast.makeText(getApplicationContext(),"Login Fail!Check the password and username!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Login Fail!Check the password and username!", Toast.LENGTH_SHORT).show();
                     }
                     if (msg.what == 2) {
-                        Toast.makeText(getApplicationContext(),"Maybe the server is down!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Maybe the server is down!", Toast.LENGTH_SHORT).show();
                     }
+                    */
+                    if (msg.what == 1 || msg.what == 2) {
+                        loginButton.setProgress(-1);
+                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Message message = new Message();
+                            buttonHandler.sendMessage(message);
+                        }
+                    }).start();
                     return false;
                 }
             });

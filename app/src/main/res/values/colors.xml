@@ -5,5 +5,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="grey600">#757575</color>
     <color name="grey400">#bdbdbd</color>
-    <color name="blue300">#90caf9</color>
+    <color name="blue200">#90caf9</color>
+    <color name="blue300">#64b5f6</color>
+    <color name="red200">#ef9a9a</color>
+    <color name="green200">#a5d6a7</color>
+    <color name="white">#fff</color>
 </resources>

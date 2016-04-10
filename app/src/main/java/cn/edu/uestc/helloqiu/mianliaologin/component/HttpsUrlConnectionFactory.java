@@ -32,6 +32,7 @@ public class HttpsUrlConnectionFactory {
             httpsURLConnection.setRequestProperty("Referer", "https://wifi.52mianliao.com/");
             httpsURLConnection.setRequestProperty("Accept-Encoding", "identity");
             httpsURLConnection.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6");
+            httpsURLConnection.setConnectTimeout(10000);
             return httpsURLConnection;
         } catch (Exception e) {
             e.printStackTrace();
