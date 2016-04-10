@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
     private View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Toast.makeText(getApplicationContext(), "Login ...", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Login ...", Toast.LENGTH_SHORT).show();
             loginButton.setIndeterminateProgressMode(true);
             loginButton.setProgress(50);
             final Handler buttonHandler = new Handler(new Handler.Callback() {
